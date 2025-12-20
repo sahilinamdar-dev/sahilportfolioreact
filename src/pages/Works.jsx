@@ -10,7 +10,7 @@ const projects = [
   {
     title: "Portfolio Website",
     image: work1,
-    live: "https://your-portfolio-live-link.com",
+    live: "https://sahilportfolioreact.vercel.app/",
     github: "https://github.com/sahilinamdar-lang/sahilportfolioreact",
     type: "external",
   },
