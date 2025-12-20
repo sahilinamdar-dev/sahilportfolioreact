@@ -1,22 +1,16 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
 import { FaGithub, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 
-import hackerBg from "../assets/images/hacker-bg.png";
+import robotImg from "../assets/images/robot.png";
+import bgMusic from "../assets/audio/ambient.mp3";
 
-const skills = [
-  "Java",
-  "Spring Boot",
-  "React",
-  "Node.js",
-  "MongoDB",
-  "MySQL",
-  "REST APIs",
-  "Tailwind",
-];
+/* TYPEWRITER TITLES */
+const titles = ["Software Developer", "Full Stack Developer"];
 
 export default function Home() {
   const ref = useRef(null);
+  const audioRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -24,112 +18,197 @@ export default function Home() {
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+
+  /* ================= MUSIC ================= */
+  const [musicOn, setMusicOn] = useState(false);
+
+  useEffect(() => {
+    audioRef.current = new Audio(bgMusic);
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.25;
+
+    const startOnScroll = () => {
+      if (!musicOn) {
+        audioRef.current.play().catch(() => {});
+        setMusicOn(true);
+      }
+      window.removeEventListener("scroll", startOnScroll);
+    };
+
+    window.addEventListener("scroll", startOnScroll);
+    return () => audioRef.current.pause();
+  }, []);
+
+  /* ================= TYPEWRITER ================= */
+  const [text, setText] = useState("");
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+
+  useEffect(() => {
+    const current = titles[titleIndex];
+
+    if (charIndex < current.length) {
+      const t = setTimeout(() => {
+        setText((p) => p + current[charIndex]);
+        setCharIndex((c) => c + 1);
+      }, 90);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => {
+        setText("");
+        setCharIndex(0);
+        setTitleIndex((i) => (i + 1) % titles.length);
+      }, 1800);
+      return () => clearTimeout(t);
+    }
+  }, [charIndex, titleIndex]);
+
+  /* ================= PARTICLES (SEPARATE LOGIC) ================= */
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 80 }).map(() => ({
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        duration: 45 + Math.random() * 35,
+        x: Math.random() * 600 - 300,
+        y: Math.random() * 600 - 300,
+      })),
+    []
+  );
+
+  /* ================= SCROLL TO WORK ================= */
+  const scrollToWork = () => {
+    document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <section
+      id="home"
       ref={ref}
-      className="relative h-[220vh] bg-black text-white overflow-hidden"
+      className="relative min-h-screen bg-black text-white overflow-hidden"
     >
-      {/* HACKER BACKGROUND IMAGE */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-25"
-        style={{ backgroundImage: `url(${hackerBg})` }}
-      />
+      {/* BASE BACKGROUND */}
+      <div className="absolute inset-0 bg-black z-0" />
+      <div className="absolute inset-0 gradient-bg z-0" />
 
-      {/* COLOR WASH */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-black/70 to-black" />
-
-      {/* CYBER LIGHT GLOW */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-cyan-500/15 blur-[180px] rounded-full" />
-        <div className="absolute bottom-1/4 right-1/3 w-[700px] h-[700px] bg-purple-600/15 blur-[180px] rounded-full" />
+      {/* PARTICLES */}
+      <div className="particle-field absolute inset-0 z-[1] pointer-events-none">
+        {particles.map((p, i) => (
+          <span
+            key={i}
+            className="particle"
+            style={{
+              top: `${p.top}%`,
+              left: `${p.left}%`,
+              animationDuration: `${p.duration}s`,
+              "--x": `${p.x}px`,
+              "--y": `${p.y}px`,
+            }}
+          />
+        ))}
       </div>
 
-      {/* SUBTLE SCANLINE OVERLAY */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(180deg, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 1px, transparent 1px, transparent 3px)",
-        }}
-      />
+      {/* SOFT COLOR GLOWS */}
+      <div className="absolute inset-0 pointer-events-none z-[1]">
+        <div className="absolute top-1/4 left-1/3 w-[650px] h-[650px] rounded-full blur-[180px] soft-blink" />
+        <div className="absolute bottom-1/4 right-1/3 w-[650px] h-[650px] rounded-full blur-[180px] soft-blink" />
+      </div>
 
-      {/* STICKY HERO */}
+      {/* HERO */}
       <motion.div
         style={{ scale, opacity }}
-        className="sticky top-0 h-screen flex items-center justify-center relative z-10"
+        className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center"
       >
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-28 items-center">
-
-          {/* LEFT CONTENT */}
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-24 items-center">
+          {/* LEFT */}
           <div>
-            <span className="text-xs tracking-widest text-gray-400 uppercase">
-              Full Stack Developer
-            </span>
+            {/* TYPEWRITER */}
+            <div className="text-3xl md:text-4xl font-semibold text-gray-200 mb-4">
+              {text}
+              <span className="animate-pulse">|</span>
+            </div>
 
-            <h1 className="mt-6 text-6xl md:text-7xl font-bold leading-tight">
-              Build.
-              <br />
-              Scale.
-              <br />
-              <span className="text-red-500">Future.</span>
+            <h1 className="text-6xl md:text-7xl font-extrabold leading-tight">
+              Hello, I’m <br />
+              <span className="text-cyan-400">Sahil Inamdar</span>
             </h1>
 
-            <p className="mt-6 text-base text-gray-400 max-w-md leading-relaxed">
-              I design and build scalable, production-ready web applications
-              with robust backend systems and modern frontend architecture.
+            <p className="mt-6 text-gray-400 max-w-md">
+              I turn complex ideas into seamless, high-impact web experiences —
+              building modern, scalable, and lightning-fast applications.
             </p>
 
+            {/* ACTION BUTTONS */}
+            <div className="mt-8 flex flex-wrap gap-4">
+              <button
+                onClick={scrollToWork}
+                className="
+                  px-6 py-3 rounded-full font-semibold text-black
+                  bg-gradient-to-r from-cyan-400 to-indigo-500
+                  shadow-[0_0_30px_rgba(34,211,238,0.35)]
+                  hover:scale-105 hover:shadow-[0_0_45px_rgba(34,211,238,0.6)]
+                  transition-all duration-300
+                "
+              >
+                View My Work
+              </button>
+
+              <a
+                href="/Sahil_Inamdar_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  px-6 py-3 rounded-full font-medium
+                  bg-white/5 backdrop-blur-md
+                  border border-white/20
+                  hover:bg-white/10 hover:border-white/40
+                  transition-all duration-300
+                "
+              >
+                My Resume
+              </a>
+            </div>
+
             {/* SOCIALS */}
-            <div className="mt-10 flex items-center gap-4">
-              {[
-                { icon: <FaGithub />, link: "https://github.com/YOUR_GITHUB" },
-                { icon: <FaLinkedinIn />, link: "https://linkedin.com/in/YOUR_LINKEDIN" },
-                { icon: <FaInstagram />, link: "https://instagram.com/YOUR_INSTAGRAM" },
-              ].map((item, i) => (
-                <motion.a
+            <div className="mt-10 flex gap-4">
+              {[FaGithub, FaLinkedinIn, FaInstagram].map((Icon, i) => (
+                <motion.div
                   key={i}
-                  href={item.link}
-                  target="_blank"
-                  whileHover={{ y: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-12 h-12 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center text-gray-300 hover:text-white transition"
+                  whileHover={{ y: -4 }}
+                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"
                 >
-                  <span className="text-lg">{item.icon}</span>
-                </motion.a>
+                  <Icon />
+                </motion.div>
               ))}
             </div>
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="relative">
-            <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-tr from-cyan-500/20 via-transparent to-purple-500/20 blur-3xl" />
-            <h2 className="text-[8.5rem] font-extrabold tracking-tight text-white">
-              SAHIL
-            </h2>
-
-            {/* SKILL RAIL */}
-            <div className="mt-12 relative h-28 overflow-hidden">
-              <motion.div
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="absolute left-0 top-0 flex gap-6"
-              >
-                {[...skills, ...skills].map((skill, i) => (
-                  <div
-                    key={i}
-                    className="px-5 py-2 rounded-lg text-sm bg-white/5 backdrop-blur-md border border-white/10 text-gray-300 whitespace-nowrap"
-                  >
-                    {skill}
-                  </div>
-                ))}
-              </motion.div>
-            </div>
+          {/* RIGHT */}
+          <div className="relative flex justify-center">
+            <motion.img
+              src={robotImg}
+              alt="Developer Avatar"
+              className="w-[420px]"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+            />
           </div>
-
         </div>
       </motion.div>
+
+      {/* MUSIC BUTTON */}
+      <button
+        className="music-btn"
+        onClick={() => {
+          if (musicOn) audioRef.current.pause();
+          else audioRef.current.play().catch(() => {});
+          setMusicOn(!musicOn);
+        }}
+      >
+        {musicOn ? "Pause Music" : "Play Music"}
+      </button>
     </section>
   );
 }

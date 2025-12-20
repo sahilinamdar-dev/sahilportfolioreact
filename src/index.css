@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* ================= BASE ================= */
 html {
   scroll-behavior: smooth;
 }
@@ -7,4 +8,120 @@ html {
 body {
   background-color: black;
   color: white;
+  overflow-x: hidden;
+}
+
+/* ================= HERO GRADIENT BACKGROUND ================= */
+/* Matches gauravbits.in style */
+
+.gradient-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      60% 80% at 85% 50%,
+      rgba(16, 185, 129, 0.35),
+      transparent 60%
+    ),
+    radial-gradient(
+      50% 70% at 15% 25%,
+      rgba(20, 184, 166, 0.25),
+      transparent 65%
+    ),
+    linear-gradient(
+      180deg,
+      #000000 0%,
+      #020617 50%,
+      #000000 100%
+    );
+  animation: gradientBreath 14s ease-in-out infinite;
+}
+
+/* Subtle brightness breathing */
+@keyframes gradientBreath {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* ================= PARTICLES ================= */
+
+.particle-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  animation: floatParticle linear infinite;
+}
+
+@keyframes floatParticle {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.7;
+  }
+  to {
+    transform: translate3d(var(--x), var(--y), 0);
+    opacity: 0;
+  }
+}
+
+/* ================= SOFT GLOW (STATIC, NO SHAKE) ================= */
+
+.soft-blink {
+  opacity: 0.35;
+  background-color: rgba(16, 185, 129, 0.35);
+  animation: softColorShift 10s ease-in-out infinite;
+}
+
+@keyframes softColorShift {
+  0% {
+    opacity: 0.25;
+    background-color: rgba(16, 185, 129, 0.35);
+  }
+  50% {
+    opacity: 0.4;
+    background-color: rgba(20, 184, 166, 0.35);
+  }
+  100% {
+    opacity: 0.25;
+    background-color: rgba(16, 185, 129, 0.35);
+  }
+}
+
+/* ================= MUSIC BUTTON ================= */
+
+.music-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  background: linear-gradient(135deg, #14b8a6, #22d3ee);
+  color: black;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  box-shadow: 0 0 30px rgba(20, 184, 166, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.music-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.6);
 }

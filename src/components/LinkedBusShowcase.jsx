@@ -14,13 +14,15 @@ export default function LinkedBusShowcase() {
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   return (
+    // ✅ CHANGE 1: min-h-[200vh]
     <section
       ref={ref}
-      className="relative h-[200vh] bg-gradient-to-br from-black via-neutral-900 to-black text-white"
+      className="relative min-h-[200vh] bg-gradient-to-br from-black via-neutral-900 to-black text-white"
     >
       <motion.div
         style={{ scale, y, opacity }}
-        className="sticky top-0 h-screen flex items-center"
+        // ✅ CHANGE 2: top-16
+        className="sticky top-16 h-screen flex items-center"
       >
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
           
@@ -49,7 +51,7 @@ export default function LinkedBusShowcase() {
               </a>
 
               <a
-                href="https://github.com/yourusername/linkedbus"
+                href="https://github.com/sahilinamdar-lang/LinkedBus-Backend"
                 target="_blank"
                 className="px-8 py-4 border border-white/30 rounded-full hover:border-white transition"
               >
@@ -69,8 +71,8 @@ export default function LinkedBusShowcase() {
               <ul className="space-y-3 text-lg">
                 <li>• Real-time seat availability</li>
                 <li>• Secure payment integration</li>
-                <li>• Live bus tracking</li>
-                <li>• Microservice-ready backend</li>
+                <li>• User-friendly booking interface</li>
+                <li>• Admin dashboard for bus management</li>
               </ul>
             </div>
           </div>
