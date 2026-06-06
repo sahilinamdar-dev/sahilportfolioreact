@@ -2,8 +2,15 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useState, useMemo } from "react";
 import { FaGithub, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 
-import robotImg from "../assets/images/robot.png";
+import robotImg from "../assets/images/robot.webp";
 import bgMusic from "../assets/audio/ambient.mp3";
+import { SOCIALS } from "../config/socials";
+
+const socialLinks = [
+  { Icon: FaGithub, href: SOCIALS.github, label: "GitHub" },
+  { Icon: FaLinkedinIn, href: SOCIALS.linkedin, label: "LinkedIn" },
+  { Icon: FaInstagram, href: SOCIALS.instagram, label: "Instagram" },
+];
 
 /* TYPEWRITER TITLES */
 const titles = ["Software Developer", "Full Stack Developer"];
@@ -20,25 +27,21 @@ export default function Home() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
-  /* ================= MUSIC ================= */
+  /* ================= MUSIC (lazy: 4.8MB mp3 fetched only on first play) ===== */
   const [musicOn, setMusicOn] = useState(false);
 
-  useEffect(() => {
-    audioRef.current = new Audio(bgMusic);
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.25;
+  useEffect(() => () => audioRef.current?.pause(), []);
 
-    const startOnScroll = () => {
-      if (!musicOn) {
-        audioRef.current.play().catch(() => {});
-        setMusicOn(true);
-      }
-      window.removeEventListener("scroll", startOnScroll);
-    };
-
-    window.addEventListener("scroll", startOnScroll);
-    return () => audioRef.current.pause();
-  }, []);
+  const toggleMusic = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(bgMusic);
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.25;
+    }
+    if (musicOn) audioRef.current.pause();
+    else audioRef.current.play().catch(() => {});
+    setMusicOn((on) => !on);
+  };
 
   /* ================= TYPEWRITER ================= */
   const [text, setText] = useState("");
@@ -64,17 +67,19 @@ export default function Home() {
     }
   }, [charIndex, titleIndex]);
 
-  /* ================= PARTICLES (SEPARATE LOGIC) ================= */
+  /* ================= PARTICLES (fewer on mobile for perf) ================= */
+  const particleCount =
+    typeof window !== "undefined" && window.innerWidth < 768 ? 25 : 70;
   const particles = useMemo(
     () =>
-      Array.from({ length: 80 }).map(() => ({
+      Array.from({ length: particleCount }).map(() => ({
         top: Math.random() * 100,
         left: Math.random() * 100,
         duration: 45 + Math.random() * 35,
         x: Math.random() * 600 - 300,
         y: Math.random() * 600 - 300,
       })),
-    []
+    [particleCount]
   );
 
   /* ================= SCROLL TO WORK ================= */
@@ -120,16 +125,16 @@ export default function Home() {
         style={{ scale, opacity }}
         className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center"
       >
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-24 items-center">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-24 items-center">
           {/* LEFT */}
           <div>
             {/* TYPEWRITER */}
-            <div className="text-3xl md:text-4xl font-semibold text-gray-200 mb-4">
+            <div className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-4">
               {text}
               <span className="animate-pulse">|</span>
             </div>
 
-            <h1 className="text-6xl md:text-7xl font-extrabold leading-tight">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight">
               Hello, I’m <br />
               <span className="text-cyan-400">Sahil Inamdar</span>
             </h1>
@@ -172,24 +177,28 @@ export default function Home() {
 
             {/* SOCIALS */}
             <div className="mt-10 flex gap-4">
-              {[FaGithub, FaLinkedinIn, FaInstagram].map((Icon, i) => (
-                <motion.div
-                  key={i}
+              {socialLinks.map(({ Icon, href, label }) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
                   whileHover={{ y: -4 }}
-                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center"
+                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:border-white/40 transition"
                 >
                   <Icon />
-                </motion.div>
+                </motion.a>
               ))}
             </div>
           </div>
 
           {/* RIGHT */}
-          <div className="relative flex justify-center">
+          <div className="relative flex justify-center order-first md:order-last">
             <motion.img
               src={robotImg}
               alt="Developer Avatar"
-              className="w-[420px]"
+              className="w-[260px] sm:w-[340px] md:w-[420px]"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
@@ -199,14 +208,7 @@ export default function Home() {
       </motion.div>
 
       {/* MUSIC BUTTON */}
-      <button
-        className="music-btn"
-        onClick={() => {
-          if (musicOn) audioRef.current.pause();
-          else audioRef.current.play().catch(() => {});
-          setMusicOn(!musicOn);
-        }}
-      >
+      <button className="music-btn" onClick={toggleMusic}>
         {musicOn ? "Pause Music" : "Play Music"}
       </button>
     </section>

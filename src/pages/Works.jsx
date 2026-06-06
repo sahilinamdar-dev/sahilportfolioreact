@@ -1,146 +1,200 @@
-import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { SOCIALS } from "../config/socials";
 
-import work1 from "../assets/images/work1.jpg";
-import work2 from "../assets/images/work2.jpg";
-import work3 from "../assets/images/work3.jpg";
+import work1 from "../assets/images/work1.webp";
+import work2 from "../assets/images/work2.webp";
+import work3 from "../assets/images/work3.webp";
 
 const projects = [
   {
     title: "Portfolio Website",
     image: work1,
     live: "https://sahilportfolioreact.vercel.app/",
-    github: "https://github.com/sahilinamdar-lang/sahilportfolioreact",
+    github: `${SOCIALS.github}/sahilportfolioreact`,
     type: "external",
+  },
+  {
+    title: "InamDesk – Forms, Photos & Fees in One Link",
+    // no screenshot asset -> branded mock preview renders
+    preview: "inamdesk",
+    tagline: "One link to collect forms, photos & fees",
+    domain: "inamdesk.vercel.app",
+    live: "https://inamdesk.vercel.app",
+    caseStudy: "/projects/inamdesk",
+    github: SOCIALS.github,
+    type: "case-study",
   },
   {
     title: "LinkedBus – Online Bus Booking System",
     image: work2,
     caseStudy: "/works/linkedbus",
-    github: "https://github.com/sahilinamdar-lang/LinkedBus-Frontend-",
+    github: `${SOCIALS.github}/LinkedBus-Frontend-`,
     type: "case-study",
   },
   {
     title: "Ticket Management System",
     image: work3,
-    live: "https://your-ticket-system-live-link.com",
-    github: "https://github.com/yourusername/ticket-system",
+    live: "https://sahilportfolioreact.vercel.app/",
+    github: SOCIALS.github,
     type: "external",
   },
 ];
 
+/* Branded faux-browser preview for InamDesk (until a real screenshot is added) */
+function InamDeskPreview({ tagline, domain }) {
+  return (
+    <div className="h-full w-full bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-500 p-3 flex flex-col">
+      {/* faux browser bar */}
+      <div className="flex items-center gap-1.5 rounded-lg bg-black/20 px-2.5 py-1.5">
+        <span className="w-2 h-2 rounded-full bg-white/40" />
+        <span className="w-2 h-2 rounded-full bg-white/40" />
+        <span className="w-2 h-2 rounded-full bg-white/40" />
+        <span className="ml-2 text-[10px] text-white/80 truncate">{domain}</span>
+      </div>
+
+      {/* body */}
+      <div className="flex-1 flex flex-col items-center justify-center text-center text-white px-2">
+        <h4 className="text-2xl sm:text-3xl font-extrabold">InamDesk</h4>
+        <p className="mt-1 text-xs text-white/90">{tagline}</p>
+        <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+          {["Forms", "Photos", "Fees"].map((t) => (
+            <span
+              key={t}
+              className="px-2.5 py-0.5 rounded-full bg-white/20 text-[11px] font-medium"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Works() {
-  const sectionRef = useRef(null);
   const sliderRef = useRef(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-66%"]);
 
   const scrollByProject = (direction) => {
     const slider = sliderRef.current;
     if (!slider) return;
-
-    const projectWidth = slider.children[0].offsetWidth + 80;
+    const card = slider.children[0];
+    const step = card ? card.offsetWidth + 32 : slider.clientWidth * 0.8;
     slider.scrollBy({
-      left: direction === "next" ? projectWidth : -projectWidth,
+      left: direction === "next" ? step : -step,
       behavior: "smooth",
     });
   };
 
   return (
-    // ✅ CHANGE 1: id="work"
-    // ✅ CHANGE 2: min-h-[200vh]
     <section
       id="work"
-      ref={sectionRef}
-      className="relative min-h-[200vh] bg-black text-white overflow-hidden"
+      className="relative py-24 md:py-32 bg-black text-white overflow-hidden"
     >
       {/* BACKGROUND GLOW */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-1/4 top-1/3 w-[700px] h-[700px] bg-emerald-500/10 blur-[180px] rounded-full" />
-        <div className="absolute right-1/4 bottom-1/3 w-[700px] h-[700px] bg-cyan-500/10 blur-[180px] rounded-full" />
+        <div className="absolute left-1/4 top-1/3 w-[500px] h-[500px] bg-emerald-500/10 blur-[160px] rounded-full" />
+        <div className="absolute right-1/4 bottom-1/3 w-[500px] h-[500px] bg-cyan-500/10 blur-[160px] rounded-full" />
       </div>
 
-      {/* STICKY CONTAINER */}
-      <div className="sticky top-16 h-screen flex items-center overflow-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-bold text-emerald-400">
+              My Work
+            </h2>
+            <p className="text-sm text-gray-400 mt-2">
+              Selected projects — swipe or use the arrows
+            </p>
+          </div>
 
-        {/* LEFT ARROW */}
-        <button
-          onClick={() => scrollByProject("prev")}
-          className="absolute left-8 z-20 w-12 h-12 rounded-full bg-white/10 border border-white/20 backdrop-blur flex items-center justify-center hover:bg-white/20 transition"
-        >
-          <FaArrowLeft />
-        </button>
-
-        {/* RIGHT ARROW */}
-        <button
-          onClick={() => scrollByProject("next")}
-          className="absolute right-8 z-20 w-12 h-12 rounded-full bg-white/10 border border-white/20 backdrop-blur flex items-center justify-center hover:bg-white/20 transition"
-        >
-          <FaArrowRight />
-        </button>
-
-        {/* PROJECT SLIDER */}
-        <motion.div
-          ref={sliderRef}
-          style={{ x }}
-          className="flex h-full items-center gap-20 px-24 overflow-hidden"
-        >
-          {projects.map((p) => (
-            <div
-              key={p.title}
-              className="group relative min-w-[60vw] h-[70vh] rounded-3xl overflow-hidden bg-white/5 backdrop-blur-md border border-white/10"
+          <div className="hidden sm:flex gap-3">
+            <button
+              onClick={() => scrollByProject("prev")}
+              aria-label="Previous"
+              className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition"
             >
-              <img
-                src={p.image}
-                alt={p.title}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
+              <FaArrowLeft />
+            </button>
+            <button
+              onClick={() => scrollByProject("next")}
+              aria-label="Next"
+              className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20 transition"
+            >
+              <FaArrowRight />
+            </button>
+          </div>
+        </div>
+      </div>
 
-              <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* SLIDER */}
+      <div
+        ref={sliderRef}
+        className="relative z-10 flex gap-8 overflow-x-auto snap-x snap-mandatory px-6 pb-6 scrollbar-hide max-w-7xl mx-auto"
+      >
+        {projects.map((p) => (
+          <div
+            key={p.title}
+            className="group snap-start shrink-0 w-[80vw] sm:w-[55vw] lg:w-[38vw] rounded-3xl overflow-hidden bg-neutral-900/80 border border-white/10 flex flex-col"
+          >
+            {/* IMAGE / PREVIEW AREA */}
+            <div className="relative h-44 sm:h-52 md:h-60 overflow-hidden">
+              {p.image ? (
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : p.preview === "inamdesk" ? (
+                <InamDeskPreview tagline={p.tagline} domain={p.domain} />
+              ) : (
+                <div className="h-full w-full bg-gradient-to-br from-neutral-700 to-neutral-900 flex items-center justify-center">
+                  <span className="text-4xl font-extrabold opacity-30">
+                    {p.title.split(" ")[0]}
+                  </span>
+                </div>
+              )}
+            </div>
 
-              <div className="absolute inset-0 flex flex-col justify-end p-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <h3 className="text-3xl font-bold mb-6">{p.title}</h3>
+            {/* INFO FOOTER (always visible) */}
+            <div className="flex flex-col gap-4 p-5 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold leading-snug">
+                {p.title}
+              </h3>
 
-                <div className="flex gap-4 flex-wrap">
-                  {p.type === "case-study" && (
-                    <a
-                      href={p.caseStudy}
-                      className="px-6 py-3 rounded-full bg-white text-black font-medium"
-                    >
-                      View Case Study
-                    </a>
-                  )}
-
-                  {p.type === "external" && (
-                    <a
-                      href={p.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-6 py-3 rounded-full bg-white text-black font-medium"
-                    >
-                      Live Project
-                    </a>
-                  )}
-
+              <div className="flex gap-2 flex-wrap mt-auto">
+                {p.type === "case-study" && (
+                  <Link
+                    to={p.caseStudy}
+                    className="px-4 py-2 rounded-full bg-white text-black text-sm font-medium hover:bg-gray-200 transition"
+                  >
+                    Case Study
+                  </Link>
+                )}
+                {p.live && (
                   <a
-                    href={p.github}
+                    href={p.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 rounded-full border border-white/30"
+                    className="px-4 py-2 rounded-full bg-cyan-500 text-black text-sm font-medium hover:bg-cyan-400 transition"
                   >
-                    GitHub
+                    Live
                   </a>
-                </div>
+                )}
+                <a
+                  href={p.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-full border border-white/30 text-sm hover:border-white transition"
+                >
+                  GitHub
+                </a>
               </div>
             </div>
-          ))}
-        </motion.div>
+          </div>
+        ))}
       </div>
     </section>
   );

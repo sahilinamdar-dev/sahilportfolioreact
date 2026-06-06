@@ -11,6 +11,28 @@ body {
   overflow-x: hidden;
 }
 
+/* hide scrollbar on horizontal carousels */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* respect users who prefer less motion (perf + accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  .particle,
+  .gradient-bg,
+  .soft-blink,
+  .dot-layer {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 /* ================= HERO GRADIENT BACKGROUND ================= */
 /* Matches gauravbits.in style */
 

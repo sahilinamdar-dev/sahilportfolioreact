@@ -1,3 +1,6 @@
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, lazy, Suspense } from "react";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -8,19 +11,54 @@ import Works from "./pages/Works";
 import Contact from "./pages/Contact";
 import LinkedBusShowcase from "./components/LinkedBusShowcase";
 
+// secondary routes split out of the main bundle
+const LinkedBusCaseStudy = lazy(() => import("./pages/LinkedBusCaseStudy"));
+const InamDesk = lazy(() => import("./pages/InamDesk"));
+
+/* single-page scroll home */
+function HomePage() {
+  return (
+    <>
+      <Home />
+      <About />
+      <Skills />
+      <Works />
+      <LinkedBusShowcase />
+      <Contact />
+    </>
+  );
+}
+
+/* jump to top on every route change */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <>
       <Navbar />
+      <ScrollToTop />
 
       {/* navbar height = h-16 */}
       <main className="pt-16">
-        <Home />
-        <About />
-        <Skills />
-        <Works />
-        <LinkedBusShowcase />
-        <Contact />
+        <Suspense
+          fallback={
+            <div className="min-h-[60vh] flex items-center justify-center text-gray-500">
+              Loading…
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/works/linkedbus" element={<LinkedBusCaseStudy />} />
+            <Route path="/projects/inamdesk" element={<InamDesk />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <Footer />

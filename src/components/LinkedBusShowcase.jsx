@@ -24,7 +24,7 @@ export default function LinkedBusShowcase() {
         // ✅ CHANGE 2: top-16
         className="sticky top-16 h-screen flex items-center"
       >
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
           
           {/* LEFT CONTENT */}
           <div>
@@ -32,7 +32,7 @@ export default function LinkedBusShowcase() {
               Case Study
             </span>
 
-            <h1 className="text-6xl md:text-7xl font-bold mt-4">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mt-4">
               Linked<span className="text-red-500">Bus</span>
             </h1>
 
@@ -45,14 +45,16 @@ export default function LinkedBusShowcase() {
               <a
                 href="https://linkedbus-frontend.vercel.app"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="px-8 py-4 bg-white text-black rounded-full font-medium hover:scale-105 transition"
               >
                 View Live Product
               </a>
 
               <a
-                href="https://github.com/sahilinamdar-lang/LinkedBus-Backend"
+                href="https://github.com/sahilinamdar-dev/LinkedBus-Backend"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="px-8 py-4 border border-white/30 rounded-full hover:border-white transition"
               >
                 GitHub

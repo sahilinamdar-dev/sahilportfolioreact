@@ -1,4 +1,12 @@
-import profilePic from "../assets/images/myprofile.jpg"; // <-- replace with your image
+import { motion } from "framer-motion";
+import profilePic from "../assets/images/myprofile.webp";
+
+const reveal = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.3 },
+  transition: { duration: 0.6 },
+};
 
 export default function About() {
   return (
@@ -18,7 +26,7 @@ export default function About() {
       <div className="relative z-10 max-w-5xl mx-auto px-6">
         
         {/* TOP GRID */}
-        <div className="grid md:grid-cols-[180px_1fr] gap-10 items-start">
+        <motion.div {...reveal} className="grid md:grid-cols-[180px_1fr] gap-10 items-start">
 
           {/* PROFILE IMAGE */}
           <div className="relative">
@@ -74,10 +82,10 @@ export default function About() {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* ABOUT ME TEXT */}
-        <div className="mt-20 max-w-3xl">
+        <motion.div {...reveal} className="mt-20 max-w-3xl">
           <h3 className="text-2xl font-bold mb-4">About Me</h3>
           <p className="text-gray-400 leading-relaxed">
             I’m a Software Developer, Content Creator, and Web Developer —
@@ -91,7 +99,7 @@ export default function About() {
             I don’t just build websites — I build digital products designed to
             scale, evolve, and stand out.
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
