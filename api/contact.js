@@ -11,9 +11,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  const apiKey = process.env.BREVO_API_KEY;
-  const sender = process.env.BREVO_SENDER_EMAIL;
-  const to = process.env.CONTACT_TO_EMAIL;
+  // accept both the clean names and the VITE_-prefixed ones already set in Vercel
+  const apiKey = process.env.BREVO_API_KEY || process.env.VITE_BREVO_API_KEY;
+  const sender =
+    process.env.BREVO_SENDER_EMAIL || process.env.VITE_BREVO_SENDER_EMAIL;
+  const to = process.env.CONTACT_TO_EMAIL || process.env.VITE_CONTACT_TO_EMAIL;
 
   if (!apiKey || !sender || !to) {
     return res.status(500).json({ error: "Email not configured on server" });
