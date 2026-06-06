@@ -16,7 +16,7 @@ export default function LinkedBusCaseStudy() {
       <LinkedBusShowcase />
 
       {/* DETAIL SECTION */}
-      <section className="max-w-4xl mx-auto px-6 pb-32 -mt-32">
+      <section className="max-w-4xl mx-auto px-6 pb-32">
         <h2 className="text-3xl font-bold mb-6">Overview</h2>
         <p className="text-gray-400 leading-relaxed">
           LinkedBus is an online bus booking platform that lets passengers search

@@ -3,12 +3,6 @@ import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
 import astronaut from "../assets/images/astronaut.webp";
 import { SOCIALS } from "../config/socials";
 
-// ⚠️ Frontend-only Brevo: VITE_ vars are PUBLIC in the built JS.
-// Anyone can read VITE_BREVO_API_KEY and abuse your account. You accepted this.
-const BREVO_API_KEY = import.meta.env.VITE_BREVO_API_KEY;
-const SENDER_EMAIL = import.meta.env.VITE_BREVO_SENDER_EMAIL; // must be a verified Brevo sender
-const TO_EMAIL = import.meta.env.VITE_CONTACT_TO_EMAIL || SOCIALS.email;
-
 const initialForm = { name: "", email: "", service: "Web Development", message: "" };
 
 export default function Contact() {
@@ -23,39 +17,16 @@ export default function Contact() {
     setStatus("sending");
     setErrorMsg("");
 
-    if (!BREVO_API_KEY || !SENDER_EMAIL) {
-      setStatus("error");
-      setErrorMsg("Email not configured. Set VITE_BREVO_API_KEY and VITE_BREVO_SENDER_EMAIL.");
-      return;
-    }
-
     try {
-      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      const res = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "api-key": BREVO_API_KEY,
-          "Content-Type": "application/json",
-          accept: "application/json",
-        },
-        body: JSON.stringify({
-          sender: { name: "Portfolio Contact", email: SENDER_EMAIL },
-          to: [{ email: TO_EMAIL }],
-          replyTo: { email: form.email, name: form.name },
-          subject: `New enquiry: ${form.service} — from ${form.name}`,
-          htmlContent: `
-            <h2>New contact form message</h2>
-            <p><strong>Name:</strong> ${form.name}</p>
-            <p><strong>Email:</strong> ${form.email}</p>
-            <p><strong>Service:</strong> ${form.service}</p>
-            <p><strong>Message:</strong></p>
-            <p>${form.message.replace(/\n/g, "<br/>")}</p>
-          `,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
       });
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || `Request failed (${res.status})`);
+        throw new Error(err.error || `Request failed (${res.status})`);
       }
 
       setStatus("sent");
@@ -94,9 +65,23 @@ export default function Contact() {
 
         {/* RIGHT — FORM */}
         <div className="bg-neutral-900/70 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-xs mb-4">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Available for freelance & contract work
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-2">
             Let’s Work Together
           </h2>
+          <p className="text-gray-400 text-sm mb-8">
+            Have a project in mind? Fill the form or email me directly at{" "}
+            <a
+              href={`mailto:${SOCIALS.email}`}
+              className="text-cyan-400 hover:underline"
+            >
+              {SOCIALS.email}
+            </a>
+          </p>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>

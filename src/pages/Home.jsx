@@ -2,7 +2,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useState, useMemo } from "react";
 import { FaGithub, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 
-import robotImg from "../assets/images/robot.webp";
 import bgMusic from "../assets/audio/ambient.mp3";
 import { SOCIALS } from "../config/socials";
 
@@ -125,27 +124,31 @@ export default function Home() {
         style={{ scale, opacity }}
         className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center"
       >
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-24 items-center">
-          {/* LEFT */}
-          <div>
-            {/* TYPEWRITER */}
-            <div className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-4">
-              {text}
-              <span className="animate-pulse">|</span>
-            </div>
+        <div className="max-w-3xl mx-auto px-6 w-full text-center md:text-left">
+          {/* AVAILABILITY BADGE */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-sm mb-6">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Available for freelance work
+          </div>
 
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight">
-              Hello, I’m <br />
-              <span className="text-cyan-400">Sahil Inamdar</span>
-            </h1>
+          {/* TYPEWRITER */}
+          <div className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-4">
+            {text}
+            <span className="animate-pulse">|</span>
+          </div>
 
-            <p className="mt-6 text-gray-400 max-w-md">
-              I turn complex ideas into seamless, high-impact web experiences —
-              building modern, scalable, and lightning-fast applications.
-            </p>
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight">
+            Hello, I’m <br />
+            <span className="text-cyan-400">Sahil Inamdar</span>
+          </h1>
 
-            {/* ACTION BUTTONS */}
-            <div className="mt-8 flex flex-wrap gap-4">
+          <p className="mt-6 text-gray-400 max-w-xl mx-auto md:mx-0">
+            I turn complex ideas into seamless, high-impact web experiences —
+            building modern, scalable, and lightning-fast applications.
+          </p>
+
+          {/* ACTION BUTTONS */}
+          <div className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
               <button
                 onClick={scrollToWork}
                 className="
@@ -175,34 +178,21 @@ export default function Home() {
               </a>
             </div>
 
-            {/* SOCIALS */}
-            <div className="mt-10 flex gap-4">
-              {socialLinks.map(({ Icon, href, label }) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  whileHover={{ y: -4 }}
-                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:border-white/40 transition"
-                >
-                  <Icon />
-                </motion.a>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT */}
-          <div className="relative flex justify-center order-first md:order-last">
-            <motion.img
-              src={robotImg}
-              alt="Developer Avatar"
-              className="w-[260px] sm:w-[340px] md:w-[420px]"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-            />
+          {/* SOCIALS */}
+          <div className="mt-10 flex gap-4 justify-center md:justify-start">
+            {socialLinks.map(({ Icon, href, label }) => (
+              <motion.a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                whileHover={{ y: -4 }}
+                className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:border-white/40 transition"
+              >
+                <Icon />
+              </motion.a>
+            ))}
           </div>
         </div>
       </motion.div>
