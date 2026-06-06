@@ -14,6 +14,7 @@ import LinkedBusShowcase from "./components/LinkedBusShowcase";
 // secondary routes split out of the main bundle
 const LinkedBusCaseStudy = lazy(() => import("./pages/LinkedBusCaseStudy"));
 const InamDesk = lazy(() => import("./pages/InamDesk"));
+const Jivandan = lazy(() => import("./pages/Jivandan"));
 
 /* single-page scroll home */
 function HomePage() {
@@ -57,6 +58,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/works/linkedbus" element={<LinkedBusCaseStudy />} />
             <Route path="/projects/inamdesk" element={<InamDesk />} />
+            <Route path="/projects/jivandan" element={<Jivandan />} />
           </Routes>
         </Suspense>
       </main>
