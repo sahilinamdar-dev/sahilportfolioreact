@@ -15,6 +15,7 @@ import LinkedBusShowcase from "./components/LinkedBusShowcase";
 const LinkedBusCaseStudy = lazy(() => import("./pages/LinkedBusCaseStudy"));
 const InamDesk = lazy(() => import("./pages/InamDesk"));
 const Jivandan = lazy(() => import("./pages/Jivandan"));
+const ProjectBazaar = lazy(() => import("./pages/ProjectBazaar"));
 
 /* single-page scroll home */
 function HomePage() {
@@ -59,6 +60,7 @@ export default function App() {
             <Route path="/works/linkedbus" element={<LinkedBusCaseStudy />} />
             <Route path="/projects/inamdesk" element={<InamDesk />} />
             <Route path="/projects/jivandan" element={<Jivandan />} />
+            <Route path="/projects/projectbazaar" element={<ProjectBazaar />} />
           </Routes>
         </Suspense>
       </main>

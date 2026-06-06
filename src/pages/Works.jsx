@@ -27,6 +27,16 @@ const projects = [
     type: "case-study",
   },
   {
+    title: "ProjectBazaar – Verified Developer Marketplace",
+    preview: "projectbazaar",
+    tagline: "Code That Actually Sells",
+    domain: "projectbazaar-app.vercel.app",
+    live: "https://projectbazaar-app.vercel.app",
+    caseStudy: "/projects/projectbazaar",
+    github: SOCIALS.github,
+    type: "case-study",
+  },
+  {
     title: "Jivandan – Medical Crowdfunding Platform",
     preview: "jivandan",
     tagline: "Hope, Health & Help",
@@ -74,6 +84,33 @@ function InamDeskPreview({ tagline, domain }) {
               key={t}
               className="px-2.5 py-0.5 rounded-full bg-white/20 text-[11px] font-medium"
             >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProjectBazaarPreview({ tagline, domain }) {
+  return (
+    <div className="h-full w-full bg-gradient-to-br from-violet-700 via-indigo-700 to-cyan-600 p-3 flex flex-col">
+      <div className="flex items-center gap-1.5 rounded-lg bg-black/20 px-2.5 py-1.5">
+        <span className="w-2 h-2 rounded-full bg-white/40" />
+        <span className="w-2 h-2 rounded-full bg-white/40" />
+        <span className="w-2 h-2 rounded-full bg-white/40" />
+        <span className="ml-2 text-[10px] text-white/80 truncate">{domain}</span>
+      </div>
+      <div className="flex-1 flex flex-col items-center justify-center text-center text-white px-2">
+        <h4 className="text-2xl sm:text-3xl font-extrabold">
+          <span className="text-white">Project</span>
+          <span className="text-cyan-300">Bazaar</span>
+        </h4>
+        <p className="mt-1 text-xs text-white/90">{tagline}</p>
+        <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+          {["MERN", "AI/ML", "Java"].map((t) => (
+            <span key={t} className="px-2.5 py-0.5 rounded-full bg-white/20 text-[11px] font-medium">
               {t}
             </span>
           ))}
@@ -185,6 +222,8 @@ export default function Works() {
                 <InamDeskPreview tagline={p.tagline} domain={p.domain} />
               ) : p.preview === "jivandan" ? (
                 <JivandanPreview tagline={p.tagline} domain={p.domain} />
+              ) : p.preview === "projectbazaar" ? (
+                <ProjectBazaarPreview tagline={p.tagline} domain={p.domain} />
               ) : (
                 <div className="h-full w-full bg-gradient-to-br from-neutral-700 to-neutral-900 flex items-center justify-center">
                   <span className="text-4xl font-extrabold opacity-30">
